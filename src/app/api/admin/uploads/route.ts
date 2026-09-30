@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { COOKIE_NAME, verifySessionToken } from "@/lib/auth/session";
 import { getStore } from "@/lib/db";
@@ -54,7 +55,24 @@ export async function POST(request: Request) {
       mime: file.type,
       data: buffer.toString("base64"),
     });
-    return NextResponse.json({ ok: true, src: `/api/media/${asset.id}` });
+    const src = `/api/media/${asset.id}`;
+    const target = String(form.get("target") ?? "gallery");
+
+    if (target === "gallery") {
+      const title =
+        asset.name
+          .replace(/\.[^.]+$/, "")
+          .replace(/[_-]+/g, " ")
+          .trim() || "Photo";
+      await getStore().createItem(
+        "gallery",
+        { title, category: "Uploads", src, alt: title },
+        true
+      );
+      revalidatePath("/", "layout");
+    }
+
+    return NextResponse.json({ ok: true, src });
   } catch (error) {
     const hint =
       error && typeof error === "object" && "hint" in error

@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ImagePlus, LoaderCircle, X } from "lucide-react";
+import { Images, ImagePlus, LoaderCircle, X } from "lucide-react";
 import { FieldLabel } from "@/components/ui/field";
+
+interface LibraryItem {
+  id: string;
+  name: string;
+  src: string;
+}
 
 interface MediaInputProps {
   id: string;
@@ -20,10 +26,11 @@ export function MediaInput({
   hint,
 }: MediaInputProps) {
   const [src, setSrc] = useState(value);
-  const [status, setStatus] = useState<
-    "idle" | "uploading" | "error"
-  >("idle");
+  const [status, setStatus] = useState<"idle" | "uploading">("idle");
   const [error, setError] = useState("");
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [library, setLibrary] = useState<LibraryItem[] | null>(null);
+  const [loadingLibrary, setLoadingLibrary] = useState(false);
 
   async function upload(file: File) {
     setStatus("uploading");
@@ -31,6 +38,7 @@ export function MediaInput({
     try {
       const body = new FormData();
       body.append("file", file);
+      body.append("target", "field");
       const response = await fetch("/api/admin/uploads", {
         method: "POST",
         body,
@@ -46,10 +54,27 @@ export function MediaInput({
       setSrc(payload.src);
       setStatus("idle");
     } catch (uploadError) {
-      setStatus("error");
+      setStatus("idle");
       setError(
         uploadError instanceof Error ? uploadError.message : "Upload failed."
       );
+    }
+  }
+
+  async function openLibrary() {
+    setPickerOpen((open) => !open);
+    if (library !== null || loadingLibrary) return;
+    setLoadingLibrary(true);
+    try {
+      const response = await fetch("/api/admin/media");
+      const payload = (await response.json()) as {
+        items?: LibraryItem[];
+      };
+      setLibrary(payload.items ?? []);
+    } catch {
+      setLibrary([]);
+    } finally {
+      setLoadingLibrary(false);
     }
   }
 
@@ -85,6 +110,16 @@ export function MediaInput({
           />
         </label>
 
+        <button
+          type="button"
+          onClick={() => void openLibrary()}
+          className="inline-flex items-center gap-2 border border-line bg-ink-700 px-4 py-2.5 text-sm text-chalk transition-colors hover:border-flare/60"
+          aria-expanded={pickerOpen}
+        >
+          <Images size={15} aria-hidden="true" />
+          Choose from library
+        </button>
+
         {src ? (
           <button
             type="button"
@@ -101,6 +136,49 @@ export function MediaInput({
         <p className="text-xs font-medium text-flare-soft" role="alert">
           {error}
         </p>
+      ) : null}
+
+      {pickerOpen ? (
+        <div className="border border-line bg-ink-700 p-3">
+          {loadingLibrary ? (
+            <p className="flex items-center gap-2 px-2 py-4 text-sm text-muted">
+              <LoaderCircle size={14} className="animate-spin" aria-hidden="true" />
+              Loading library…
+            </p>
+          ) : library && library.length ? (
+            <div className="grid max-h-64 grid-cols-3 gap-3 overflow-y-auto p-1 sm:grid-cols-4">
+              {library.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setSrc(item.src);
+                    setPickerOpen(false);
+                    setError("");
+                  }}
+                  className={`group relative aspect-square overflow-hidden border transition-colors ${
+                    src === item.src
+                      ? "border-flare"
+                      : "border-line hover:border-flare/60"
+                  }`}
+                  title={item.name}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.src}
+                    alt={item.name}
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="px-2 py-4 text-sm text-muted">
+              No images uploaded yet — use{" "}
+              <span className="text-chalk">Upload image</span> first.
+            </p>
+          )}
+        </div>
       ) : null}
 
       {src ? (

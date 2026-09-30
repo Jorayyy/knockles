@@ -24,9 +24,11 @@ export default async function MediaPage() {
         <p className="u-label text-flare-soft">Media</p>
         <h1 className="u-display mt-3 text-5xl">Image library</h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
-          Upload photos once, then use their path in coach profiles and the
-          gallery. Images are stored in the database and served from{" "}
-          <span className="font-mono text-muted">/api/media/&lt;id&gt;</span>.
+          Upload photos here and they appear on the{" "}
+          <span className="text-chalk">gallery page</span> straight away (edit or
+          remove them under Content → Gallery). Inside content forms, use{" "}
+          <span className="text-chalk">Choose from library</span> to reuse any of
+          these images — no typing needed.
         </p>
       </header>
 

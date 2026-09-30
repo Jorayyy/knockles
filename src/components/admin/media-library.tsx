@@ -24,6 +24,7 @@ export function MediaUploader() {
     try {
       const body = new FormData();
       body.append("file", file);
+      body.append("target", "gallery");
       const response = await fetch("/api/admin/uploads", {
         method: "POST",
         body,
