@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
 
@@ -26,10 +26,8 @@ export function track(name: string, payload: Record<string, unknown> = {}) {
 export function Analytics() {
   const pathname = usePathname();
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
-  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
-    setEnabled(true);
     const handler = (event: MouseEvent) => {
       const target = (event.target as HTMLElement | null)?.closest<HTMLElement>(
         "[data-track]"
@@ -48,10 +46,9 @@ export function Analytics() {
   }, []);
 
   useEffect(() => {
-    if (!enabled) return;
     push("page_view", { page_path: pathname });
     window.gtag?.("event", "page_view", { page_path: pathname });
-  }, [pathname, enabled]);
+  }, [pathname]);
 
   if (!gaId) return null;
 

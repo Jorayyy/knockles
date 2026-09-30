@@ -12,12 +12,13 @@ import type {
   SiteSettings,
   StoredItem,
 } from "@/lib/content/types";
-import { StoreError, type ListOptions, type Store } from "./types";
+import { StoreError, type ListOptions, type MediaAsset, type Store } from "./types";
 
 interface FileState {
   settings: Partial<SiteSettings>;
   collections: Partial<Record<CollectionKey, StoredItem<unknown>[]>>;
   leads: Lead[];
+  media: MediaAsset[];
 }
 
 const DATA_DIR = path.join(process.cwd(), "data");
@@ -42,7 +43,7 @@ function seedState(): FileState {
       })
     );
   }
-  return { settings: {}, collections, leads: [] };
+  return { settings: {}, collections, leads: [], media: [] };
 }
 
 let cache: FileState | null = null;
@@ -53,6 +54,7 @@ async function readState(): Promise<FileState> {
   try {
     const raw = await fs.readFile(DATA_FILE, "utf8");
     cache = JSON.parse(raw) as FileState;
+    cache.media = cache.media ?? [];
   } catch (error) {
     const code = (error as NodeJS.ErrnoException).code;
     if (code !== "ENOENT") {
@@ -244,6 +246,42 @@ class JsonStore implements Store {
     return serialize(async () => {
       const state = await readState();
       state.leads = state.leads.filter((lead) => lead.id !== id);
+      await writeState(state);
+    });
+  }
+
+  async listMedia(): Promise<MediaAsset[]> {
+    const state = await readState();
+    return [...(state.media ?? [])].sort((a, b) =>
+      b.createdAt.localeCompare(a.createdAt)
+    );
+  }
+
+  async getMedia(id: string): Promise<MediaAsset | null> {
+    const state = await readState();
+    return state.media.find((asset) => asset.id === id) ?? null;
+  }
+
+  saveMedia(input: { name: string; mime: string; data: string }) {
+    return serialize(async () => {
+      const state = await readState();
+      const asset: MediaAsset = {
+        id: crypto.randomUUID(),
+        name: input.name,
+        mime: input.mime,
+        data: input.data,
+        createdAt: now(),
+      };
+      state.media = [asset, ...(state.media ?? [])];
+      await writeState(state);
+      return asset;
+    });
+  }
+
+  deleteMedia(id: string) {
+    return serialize(async () => {
+      const state = await readState();
+      state.media = (state.media ?? []).filter((asset) => asset.id !== id);
       await writeState(state);
     });
   }

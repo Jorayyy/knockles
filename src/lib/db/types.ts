@@ -33,6 +33,22 @@ export interface Store {
   createLead(lead: Omit<Lead, "id" | "createdAt" | "status">): Promise<Lead>;
   updateLead(id: string, patch: Partial<Pick<Lead, "status">>): Promise<void>;
   deleteLead(id: string): Promise<void>;
+  listMedia(): Promise<MediaAsset[]>;
+  getMedia(id: string): Promise<MediaAsset | null>;
+  saveMedia(input: {
+    name: string;
+    mime: string;
+    data: string;
+  }): Promise<MediaAsset>;
+  deleteMedia(id: string): Promise<void>;
+}
+
+export interface MediaAsset {
+  id: string;
+  name: string;
+  mime: string;
+  data: string;
+  createdAt: string;
 }
 
 export class StoreError extends Error {

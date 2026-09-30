@@ -13,6 +13,7 @@ export async function buildMetadata(path: string, title?: string): Promise<Metad
   const url = absoluteUrl(path);
 
   return {
+    metadataBase: absoluteUrl("/"),
     title: pageTitle,
     description,
     keywords: seo.keywords

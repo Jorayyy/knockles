@@ -11,7 +11,12 @@ import type {
   SiteSettings,
   StoredItem,
 } from "@/lib/content/types";
-import { StoreError, type ListOptions, type Store } from "./types";
+import {
+  StoreError,
+  type ListOptions,
+  type MediaAsset,
+  type Store,
+} from "./types";
 
 type Row = Record<string, unknown>;
 
@@ -78,6 +83,13 @@ const SCHEMA: string[] = [
     message TEXT NOT NULL DEFAULT '',
     source TEXT NOT NULL DEFAULT '',
     status TEXT NOT NULL DEFAULT 'new'
+  )`,
+  `CREATE TABLE IF NOT EXISTS media (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    mime TEXT NOT NULL,
+    data TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
   )`,
 ];
 
@@ -375,6 +387,78 @@ class PostgresStore implements Store {
     await this.init();
     try {
       await this.run(`DELETE FROM leads WHERE id = $1`, [id]);
+    } catch (error) {
+      fail(error);
+    }
+  }
+
+  async listMedia(): Promise<MediaAsset[]> {
+    await this.init();
+    try {
+      const rows = await this.run(
+        `SELECT id, name, mime, data, created_at FROM media ORDER BY created_at DESC`
+      );
+      return rows.map((row) => ({
+        id: String(row.id),
+        name: String(row.name),
+        mime: String(row.mime),
+        data: String(row.data),
+        createdAt: new Date(String(row.created_at)).toISOString(),
+      }));
+    } catch (error) {
+      fail(error);
+    }
+  }
+
+  async getMedia(id: string): Promise<MediaAsset | null> {
+    await this.init();
+    try {
+      const rows = await this.run(
+        `SELECT id, name, mime, data, created_at FROM media WHERE id = $1`,
+        [id]
+      );
+      if (!rows.length) return null;
+      const row = rows[0];
+      return {
+        id: String(row.id),
+        name: String(row.name),
+        mime: String(row.mime),
+        data: String(row.data),
+        createdAt: new Date(String(row.created_at)).toISOString(),
+      };
+    } catch (error) {
+      fail(error);
+    }
+  }
+
+  async saveMedia(input: {
+    name: string;
+    mime: string;
+    data: string;
+  }): Promise<MediaAsset> {
+    await this.init();
+    try {
+      const id = crypto.randomUUID();
+      const rows = await this.run(
+        `INSERT INTO media (id, name, mime, data) VALUES ($1, $2, $3, $4) RETURNING created_at`,
+        [id, input.name, input.mime, input.data]
+      );
+      return {
+        id,
+        name: input.name,
+        mime: input.mime,
+        data: input.data,
+        createdAt: new Date(String(rows[0].created_at)).toISOString(),
+      };
+    } catch (error) {
+      fail(error);
+    }
+  }
+
+  async deleteMedia(id: string): Promise<void> {
+    await this.init();
+    try {
+      await this.run(`DELETE FROM media WHERE id = $1`, [id]);
     } catch (error) {
       fail(error);
     }
