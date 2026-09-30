@@ -3,6 +3,7 @@ export const SITE_NAV = [
   { label: "Schedule", href: "/schedule" },
   { label: "Pricing", href: "/pricing" },
   { label: "First visit", href: "/first-visit" },
+  { label: "Gallery", href: "/gallery" },
   { label: "About", href: "/about" },
 ] as const;
 
@@ -14,6 +15,7 @@ export const FOOTER_NAV = [
   { label: "Coaches", href: "/coaches" },
   { label: "Gallery", href: "/gallery" },
   { label: "Testimonials", href: "/testimonials" },
+  { label: "About", href: "/about" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
   { label: "Book a trial", href: "/book" },

@@ -16,7 +16,7 @@ export async function Header() {
         <Wordmark wordmark={business.wordmark} tagline="Boxing Gym" />
 
         <nav
-          className="hidden items-center gap-8 lg:flex"
+          className="hidden items-center gap-6 lg:flex xl:gap-8"
           aria-label="Primary navigation"
         >
           {SITE_NAV.map((item) => (
@@ -31,6 +31,7 @@ export async function Header() {
             href={messenger}
             variant="outline"
             size="sm"
+            className="hidden xl:inline-flex"
             data-track="cta_messenger"
           >
             <MessageCircle size={14} aria-hidden="true" />
