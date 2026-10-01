@@ -5,8 +5,8 @@ import { LoaderCircle, Save } from "lucide-react";
 import type { ActionState } from "@/app/admin/actions";
 import type { SettingsSection } from "@/app/admin/schema";
 import { SchemaFields } from "@/components/admin/fields";
+import { FormMessage } from "@/components/admin/form-message";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 const IDLE: ActionState = { ok: false };
 
@@ -36,19 +36,7 @@ export function SettingsForm({
         idPrefix={`settings-${section.key}`}
       />
 
-      {state.error || state.message ? (
-        <p
-          className={cn(
-            "border px-4 py-3 text-sm",
-            state.ok
-              ? "border-flare/50 bg-flare/10 text-flare-soft"
-              : "border-flare/50 bg-flare/10 text-flare-soft"
-          )}
-          role={state.ok ? "status" : "alert"}
-        >
-          {state.ok ? state.message : state.error}
-        </p>
-      ) : null}
+      <FormMessage state={state} />
 
       <div>
         <Button type="submit" variant="primary" disabled={pending}>

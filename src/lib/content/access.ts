@@ -34,17 +34,34 @@ export function parseKeyedLines(value: string): {
   title: string;
   text: string;
 }[] {
-  return value
+  const lines = value
     .split("\n")
     .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
+    .filter(Boolean);
+
+  if (!lines.length) return [];
+
+  // Canonical format is "Title | Description" on a single line.
+  const allPipeDelimited = lines.every((line) => line.includes("|"));
+
+  if (allPipeDelimited) {
+    return lines.map((line) => {
       const [title, ...rest] = line.split("|");
-      return {
-        title: title.trim(),
-        text: rest.join("|").trim(),
-      };
+      return { title: title.trim(), text: rest.join("|").trim() };
     });
+  }
+
+  // Legacy format alternates a title line and a description line.
+  const entries: { title: string; text: string }[] = [];
+  for (let index = 0; index < lines.length; index += 2) {
+    const [title, ...rest] = lines[index].split("|");
+    entries.push({
+      title: title.trim(),
+      text: (rest.join("|").trim() || lines[index + 1]?.trim() || "").trim(),
+    });
+    if (rest.length === 0 && lines[index + 1]) index += 1;
+  }
+  return entries;
 }
 
 export function parseList(value: string): string[] {

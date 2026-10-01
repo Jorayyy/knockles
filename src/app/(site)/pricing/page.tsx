@@ -43,7 +43,7 @@ export default async function PricingPage() {
             Get current rates
           </ButtonLink>
           <ButtonLink href="/book" variant="outline" data-track="cta_pricing_trial">
-            Book a trial session
+            {settings.trial.label}
             <ArrowRight size={15} aria-hidden="true" />
           </ButtonLink>
         </div>
@@ -51,25 +51,34 @@ export default async function PricingPage() {
 
       <section className="border-b border-line bg-ink">
         <div className="u-shell py-14 md:py-20">
-          <div className="grid gap-5 lg:grid-cols-3">
-            {plans.map((plan, index) => (
-              <PlanCard
-                key={plan.name}
-                plan={plan}
-                index={index}
-                ctaHref={plan.cta ? "/book" : "/book"}
-              />
-            ))}
-          </div>
-
-          {!plans.length ? (
+          {plans.length ? (
+            <div className="grid gap-5 lg:grid-cols-3">
+              {plans.map((plan, index) => (
+                <PlanCard key={plan.name} plan={plan} index={index} />
+              ))}
+            </div>
+          ) : (
             <div className="border border-line bg-ink-800 p-10 text-center">
               <p className="u-display text-3xl">Rates are sent on request</p>
               <p className="mx-auto mt-3 max-w-md text-sm text-muted">
                 Message the gym for the latest membership and session prices.
               </p>
+              <div className="mt-6 flex flex-wrap justify-center gap-3">
+                <ButtonLink
+                  href={messenger}
+                  variant="primary"
+                  data-track="cta_pricing_empty_messenger"
+                >
+                  <MessageCircle size={15} aria-hidden="true" />
+                  Get current rates
+                </ButtonLink>
+                <ButtonLink href="/book" variant="outline" data-track="cta_pricing_empty_trial">
+                  {settings.trial.label}
+                  <ArrowRight size={15} aria-hidden="true" />
+                </ButtonLink>
+              </div>
             </div>
-          ) : null}
+          )}
 
           <p className="mt-8 text-sm leading-relaxed text-muted-dim">
             Prices shown only when published by the gym. Nothing on this page is

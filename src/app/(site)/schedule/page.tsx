@@ -36,7 +36,7 @@ export default async function SchedulePage() {
             Ask what&apos;s running today
           </ButtonLink>
           <ButtonLink href="/book" variant="outline" data-track="cta_schedule_trial">
-            Book a trial session
+            {settings.trial.label}
             <ArrowRight size={15} aria-hidden="true" />
           </ButtonLink>
         </div>

@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { Inter, Barlow_Condensed } from "next/font/google";
+import { absoluteUrl } from "@/lib/utils";
 import "./globals.css";
 
 const inter = Inter({
@@ -10,9 +12,13 @@ const inter = Inter({
 const condensed = Barlow_Condensed({
   variable: "--font-condensed",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
 });
+
+export const metadata: Metadata = {
+  metadataBase: absoluteUrl("/"),
+};
 
 export default function RootLayout({
   children,

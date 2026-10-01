@@ -37,7 +37,7 @@ export default async function FaqPage() {
             Ask something else
           </ButtonLink>
           <ButtonLink href="/book" variant="outline" data-track="cta_faq_trial">
-            Book a trial session
+            {settings.trial.label}
             <ArrowRight size={15} aria-hidden="true" />
           </ButtonLink>
         </div>

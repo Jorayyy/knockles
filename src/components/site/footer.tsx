@@ -6,12 +6,12 @@ import {
   YoutubeIcon,
 } from "@/components/icons/social";
 import { getSettings } from "@/lib/content/access";
-import { FOOTER_NAV } from "@/lib/site";
+import { FOOTER_GROUPS } from "@/lib/site";
 import { formatPhone } from "@/lib/utils";
 import { Wordmark } from "./wordmark";
 import type { Hour } from "@/lib/content/types";
 
-function summarizeHours(hours: Hour[]): string {
+export function summarizeHours(hours: Hour[]): string {
   const open = hours.filter((entry) => !entry.closed);
   if (!open.length) return "Message us for opening hours";
 
@@ -24,28 +24,31 @@ function summarizeHours(hours: Hour[]): string {
     weekday.length === 5 &&
     new Set(weekday.map((entry) => `${entry.open}-${entry.close}`)).size === 1
   ) {
-    parts.push(
-      `Mon–Fri ${weekday[0].open} – ${weekday[0].close}`
-    );
+    parts.push(`Mon–Fri ${weekday[0].open} – ${weekday[0].close}`);
   } else {
     for (const entry of weekday) {
       parts.push(`${entry.day.slice(0, 3)} ${entry.open} – ${entry.close}`);
     }
   }
 
-  for (const entry of open.filter((item) => item.day === "Saturday" || item.day === "Sunday")) {
+  for (const entry of open.filter(
+    (item) => item.day === "Saturday" || item.day === "Sunday"
+  )) {
     parts.push(`${entry.day.slice(0, 3)} ${entry.open} – ${entry.close}`);
   }
 
-  if (hours.some((entry) => entry.closed && entry.day === "Sunday")) {
-    if (!open.some((entry) => entry.day === "Sunday")) parts.push("Sun Closed");
+  if (
+    hours.some((entry) => entry.closed && entry.day === "Sunday") &&
+    !open.some((entry) => entry.day === "Sunday")
+  ) {
+    parts.push("Sun closed");
   }
 
   return parts.join(" · ");
 }
 
 export async function Footer() {
-  const { business, seo } = await getSettings();
+  const { business, seo, trial } = await getSettings();
   const mapHref = `https://www.google.com/maps/search/?api=1&query=${business.latitude},${business.longitude}`;
   const socials = [
     { label: "Facebook", href: business.facebook, icon: FacebookIcon },
@@ -70,7 +73,7 @@ export async function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-track={`social_${social.label.toLowerCase()}`}
-                className="inline-flex h-10 w-10 items-center justify-center border border-line text-muted transition-colors hover:border-chalk hover:text-chalk"
+                className="inline-flex h-11 w-11 items-center justify-center border border-line text-muted transition-colors hover:border-chalk hover:text-chalk"
               >
                 <social.icon size={16} aria-hidden="true" />
                 <span className="sr-only">{social.label}</span>
@@ -79,21 +82,23 @@ export async function Footer() {
           </div>
         </div>
 
-        <nav aria-label="Footer navigation">
-          <p className="u-label mb-5 text-muted-dim">Explore</p>
-          <ul className="grid grid-cols-2 gap-x-6 gap-y-3 lg:grid-cols-1 lg:gap-y-2.5">
-            {FOOTER_NAV.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="text-sm text-muted transition-colors hover:text-chalk"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {FOOTER_GROUPS.map((group) => (
+          <nav key={group.label} aria-label={`Footer: ${group.label}`}>
+            <p className="u-label mb-5 text-muted-dim">{group.label}</p>
+            <ul className="grid gap-2.5">
+              {group.links.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-sm text-muted transition-colors hover:text-chalk"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
 
         <div>
           <p className="u-label mb-5 text-muted-dim">Visit the gym</p>
@@ -118,14 +123,12 @@ export async function Footer() {
             <MapPin size={14} aria-hidden="true" />
             Open in Google Maps
           </a>
-          <p className="mt-5 text-xs leading-relaxed text-muted-dim">
+          <p className="mt-4 text-xs leading-relaxed text-muted-dim">
             {summarizeHours(business.hours)}
           </p>
-        </div>
 
-        <div>
-          <p className="u-label mb-5 text-muted-dim">Contact</p>
-          <div className="flex flex-col gap-3">
+          <p className="u-label mt-7 mb-4 text-muted-dim">Contact</p>
+          <div className="flex flex-col items-start gap-3">
             <a
               href={`tel:${business.phone}`}
               data-track="cta_phone_footer"
@@ -141,15 +144,19 @@ export async function Footer() {
               data-track="cta_messenger_footer"
               className="inline-flex items-center gap-3 text-sm text-muted transition-colors hover:text-chalk"
             >
-              <MessageCircle size={15} aria-hidden="true" className="text-flare-soft" />
+              <MessageCircle
+                size={15}
+                aria-hidden="true"
+                className="text-flare-soft"
+              />
               Message on Messenger
             </a>
             <Link
               href="/book"
               data-track="cta_trial_footer"
-              className="u-label mt-2 inline-flex h-11 items-center justify-center border border-flare bg-flare px-5 text-white transition-colors hover:border-flare-deep hover:bg-flare-deep"
+              className="u-label mt-2 inline-flex min-h-11 items-center justify-center border border-flare bg-flare px-5 text-white transition-colors hover:border-flare-deep hover:bg-flare-deep"
             >
-              Book a trial session
+              {trial.label}
             </Link>
           </div>
         </div>
@@ -158,7 +165,8 @@ export async function Footer() {
       <div className="border-t border-line">
         <div className="u-shell flex flex-col items-center justify-between gap-3 py-5 text-xs text-muted-dim sm:flex-row">
           <p>
-            © {new Date().getFullYear()} {business.name} · Mactan, Cebu, Philippines
+            © {new Date().getFullYear()} {business.name} · {business.city}
+            {business.country ? `, ${business.country}` : ""}
           </p>
           <div className="flex items-center gap-4">
             <Link href="/admin" className="transition-colors hover:text-chalk">

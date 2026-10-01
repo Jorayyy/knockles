@@ -1,13 +1,15 @@
 import { ImageResponse } from "next/og";
 import { getSettings } from "@/lib/content/access";
+import { formatPhone } from "@/lib/utils";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "Knock'ls Boxing Gym";
+export const alt = "Knock'ls Boxing Gym — Boxing & Muay Thai in Mactan, Cebu";
+export const revalidate = 3600;
 
 export default async function OpengraphImage() {
   const settings = await getSettings();
-  const { business } = settings;
+  const { business, trial } = settings;
 
   return new ImageResponse(
     (
@@ -49,7 +51,8 @@ export default async function OpengraphImage() {
               color: "#e8847b",
             }}
           >
-            {business.city || "Mactan, Cebu"}
+            {[business.addressLine2, business.city].filter(Boolean).join(", ") ||
+              "Mactan, Cebu"}
           </span>
         </div>
 
@@ -57,9 +60,10 @@ export default async function OpengraphImage() {
           <span
             style={{
               fontSize: 108,
-              fontWeight: 700,
-              letterSpacing: -2,
+              fontWeight: 800,
+              letterSpacing: -3,
               lineHeight: 1,
+              textTransform: "uppercase",
             }}
           >
             {business.wordmark || "Knock'ls"}
@@ -86,15 +90,18 @@ export default async function OpengraphImage() {
             color: "#9a958c",
           }}
         >
-          <span>{business.phoneDisplay || business.phone}</span>
+          <span>{formatPhone(business.phoneDisplay || business.phone)}</span>
           <span
             style={{
               color: "#efeae2",
               border: "2px solid #e02b1d",
               padding: "12px 28px",
+              textTransform: "uppercase",
+              letterSpacing: 3,
+              fontSize: 22,
             }}
           >
-            Book a trial session
+            {trial.label || "Book a trial session"}
           </span>
         </div>
       </div>

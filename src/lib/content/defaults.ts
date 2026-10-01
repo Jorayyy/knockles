@@ -35,9 +35,10 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   },
   hero: {
     eyebrow: "Mactan · Cebu · Philippines",
-    headline: "Train hard.\nGet stronger.\nBecome better.",
+    headline: "Boxing.\nMuay Thai.\nReal coaching.",
     subheadline:
       "Boxing and Muay Thai coaching for first-timers, families and visiting fighters. Real instruction, private or small-group sessions — message us and start training.",
+    image: "",
     primaryLabel: "Book a trial session",
     primaryHref: "/book",
     secondaryLabel: "Message us",
@@ -45,7 +46,8 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   },
   home: {
     benefits:
-      "No experience needed\nYou will be coached from the basics — stance, guard and footwork first.\nPrivate training\nOne-on-one sessions at your pace, in boxing or Muay Thai.\nBoxing and Muay Thai\nTwo disciplines, one gym, from technique to conditioning.\nCoaches who fight\nTraining shaped by coaches who work with active boxers.",
+      "No experience needed | You will be coached from the basics — stance, guard and footwork first.\nPrivate training | One-on-one sessions at your pace, in boxing or Muay Thai.\nBoxing and Muay Thai | Two disciplines, one gym, from technique to conditioning.\nCoaches who fight | Training shaped by coaches who work with active boxers.",
+    benefitsHeading: "Coached on every round",
     programsHeading: "What you can train",
     programsText:
       "Pick a discipline, or let your coach build the session around your goals.",
@@ -66,14 +68,14 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     body:
       "The gym opened its doors in Mactan with one focus: real coaching, at any level. Visitors train one-on-one or in small sessions with coaches who stay involved through every round — correcting, encouraging and building technique from the ground up.\n\nPublic reviews describe the same experience from different angles: trainers who are friendly and knowledgeable, a welcoming atmosphere for absolute beginners, private sessions that are carefully planned, and coaches who also prepare fighters who compete.\n\nWhether you are in Cebu for a week or looking for a gym to train in long-term, you are training in the same room, with the same coaches, as the fighters who call Knock'ls home.",
     values:
-      "Coaching first\nEvery session is led — you are never left to figure it out alone.\nEveryone starts somewhere\nBeginners are the norm here, not an exception.\nShow up, improve\nConsistency beats intensity. We build habits you can keep.",
+      "Coaching first | Every session is led — you are never left to figure it out alone.\nEveryone starts somewhere | Beginners are the norm here, not an exception.\nShow up, improve | Consistency beats intensity. We build habits you can keep.",
   },
   firstVisit: {
     headline: "What happens when you visit",
     intro:
       "Walking into a boxing gym for the first time is the hardest part. Here is exactly how it goes at Knock'ls.",
     steps:
-      "Message the gym\nSend us a Messenger message or fill in the trial form. Tell us if you have trained before — most people have not.\nPick a time\nWe will confirm a session that fits the gym's opening hours and your schedule.\nMeet your coach\nYour coach talks through your goals and experience before anything starts.\nLearn the basics\nStance, guard, footwork and punches — taught slowly, then built up.\nTrain\nRounds on the pads, bags and conditioning, at a pace that suits you.\nDecide\nAfter the session, ask about schedules and rates. No pressure either way.",
+      "Message the gym | Send us a Messenger message or fill in the trial form. Tell us if you have trained before — most people have not.\nPick a time | We will confirm a session that fits the gym's opening hours and your schedule.\nMeet your coach | Your coach talks through your goals and experience before anything starts.\nLearn the basics | Stance, guard, footwork and punches — taught slowly, then built up.\nTrain | Rounds on the pads, bags and conditioning, at a pace that suits you.\nDecide | After the session, ask about schedules and rates. No pressure either way.",
     closing:
       "Still unsure? Message us — a short conversation before you visit costs nothing.",
   },

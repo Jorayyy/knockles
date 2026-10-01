@@ -47,7 +47,13 @@ export default async function FirstVisitPage() {
 
       <section className="border-b border-line bg-ink">
         <div className="u-shell py-14 md:py-20">
-          <ol className="grid gap-px border border-line bg-line md:grid-cols-2">
+          <SectionHeading
+            eyebrow="The walk-through"
+            title="From first message to first round"
+            text="Six steps, no surprises. Nothing is signed and nothing is owed before you have trained."
+          />
+
+          <ol className="mt-10 grid gap-px border border-line bg-line md:grid-cols-2">
             {steps.map((step, index) => (
               <Reveal
                 key={step.title}
@@ -55,11 +61,11 @@ export default async function FirstVisitPage() {
                 delay={(index % 2) * 60}
                 className="flex gap-5 bg-ink p-6 sm:p-8"
               >
-                <span className="u-display shrink-0 text-5xl text-flare/90 sm:text-6xl">
+                <span className="u-display shrink-0 text-5xl text-flare/90 sm:text-6xl" aria-hidden="true">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <div>
-                  <h2 className="u-display text-2xl sm:text-3xl">{step.title}</h2>
+                  <h3 className="u-display text-2xl sm:text-3xl">{step.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
                     {step.text}
                   </p>
@@ -95,6 +101,10 @@ export default async function FirstVisitPage() {
                 </li>
               ))}
             </ul>
+            <p className="mt-5 text-sm leading-relaxed text-muted">
+              Gloves and other gear: message us before you come and we will tell
+              you exactly what to bring and what you can use at the gym.
+            </p>
           </div>
 
           <Reveal delay={80} className="border border-line bg-ink p-6 sm:p-7">

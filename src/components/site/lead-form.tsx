@@ -147,7 +147,7 @@ export function LeadForm({
         <div className="flex h-12 w-12 items-center justify-center border border-flare/50 text-flare-soft">
           <CircleCheckBig size={22} aria-hidden="true" />
         </div>
-        <h3 className="u-display mt-6 text-3xl">Request sent</h3>
+        <h2 className="u-display mt-6 text-3xl">Request sent</h2>
         <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">
           {trial.successMessage}
         </p>
@@ -172,7 +172,8 @@ export function LeadForm({
       method="POST"
       noValidate
       data-track="lead_form_submit"
-      className="border border-line bg-ink-800 p-6 sm:p-8"
+      aria-busy={status === "submitting"}
+      className="relative border border-line bg-ink-800 p-6 sm:p-8"
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">

@@ -112,6 +112,7 @@ export interface HeroSettings {
   eyebrow: string;
   headline: string;
   subheadline: string;
+  image: string;
   primaryLabel: string;
   primaryHref: string;
   secondaryLabel: string;
@@ -120,6 +121,7 @@ export interface HeroSettings {
 
 export interface HomeSettings {
   benefits: string;
+  benefitsHeading: string;
   programsHeading: string;
   programsText: string;
   environmentHeading: string;

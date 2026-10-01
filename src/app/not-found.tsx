@@ -1,29 +1,26 @@
 import type { Metadata } from "next";
 import { ArrowRight, Search } from "lucide-react";
-import { buildMetadata } from "@/lib/seo";
 import { ButtonLink } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section";
 import { Footer } from "@/components/site/footer";
 import { Header } from "@/components/site/header";
+import { StickyMobileCTA } from "@/components/site/sticky-cta";
+import { FOOTER_NAV } from "@/lib/site";
 
-export async function generateMetadata(): Promise<Metadata> {
-  return buildMetadata("/", "Page not found");
-}
+export const metadata: Metadata = {
+  title: "Page not found · Knock'ls Boxing Gym",
+  description:
+    "That page does not exist. Find boxing and Muay Thai training in Mactan, Cebu.",
+  robots: { index: false, follow: false },
+};
 
-const LINKS = [
-  { href: "/programs", label: "Programs" },
-  { href: "/schedule", label: "Schedule" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/first-visit", label: "Your first visit" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/contact", label: "Contact" },
-];
+const LINKS = FOOTER_NAV.slice(0, 6);
 
 export default function NotFound() {
   return (
     <>
       <Header />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <section className="border-b border-line bg-ink">
           <div className="u-shell flex min-h-[70vh] flex-col justify-center py-20 text-center">
             <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border border-flare/50 text-flare-soft">
@@ -44,7 +41,7 @@ export default function NotFound() {
                   key={link.href}
                   href={link.href}
                   variant="outline"
-                  size="sm"
+                  size="md"
                 >
                   {link.label}
                 </ButtonLink>
@@ -60,6 +57,7 @@ export default function NotFound() {
         </section>
       </main>
       <Footer />
+      <StickyMobileCTA />
     </>
   );
 }

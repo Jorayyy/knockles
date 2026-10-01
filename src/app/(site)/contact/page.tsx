@@ -156,21 +156,23 @@ export default async function ContactPage() {
               title="Prefer to write it down?"
               text="Fill in the form and the gym will get back to you on phone or Messenger. Include your experience level and the days you are free."
             />
-            <div className="mt-6 flex items-center gap-4 border border-line bg-ink p-4">
-              <FacebookIcon size={20} />
-              <div>
-                <p className="u-label text-muted-dim">Follow Knock&apos;ls</p>
-                <a
-                  href={business.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-track="social_facebook_contact"
-                  className="text-sm text-chalk underline decoration-flare underline-offset-4"
-                >
-                  facebook.com/KnocklsBoxGym
-                </a>
+            {business.facebook ? (
+              <div className="mt-6 flex items-center gap-4 border border-line bg-ink p-4">
+                <FacebookIcon size={20} />
+                <div>
+                  <p className="u-label text-muted-dim">Follow Knock&apos;ls</p>
+                  <a
+                    href={business.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-track="social_facebook_contact"
+                    className="break-all text-sm text-chalk underline decoration-flare underline-offset-4"
+                  >
+                    {business.facebook.replace(/^https?:\/\/(www\.)?/, "")}
+                  </a>
+                </div>
               </div>
-            </div>
+            ) : null}
           </Reveal>
 
           <Reveal delay={80}>

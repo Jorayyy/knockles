@@ -1,42 +1,100 @@
+import Image from "next/image";
 import { ArrowRight, MapPin, MessageCircle, Phone, Star } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { Eyebrow } from "@/components/ui/section";
 import type { SiteSettings } from "@/lib/content/types";
 import { formatPhone } from "@/lib/utils";
+import { summarizeHours } from "@/components/site/footer";
 
 export function Hero({ settings }: { settings: SiteSettings }) {
   const { business, hero, trial } = settings;
   const messenger = hero.secondaryHref || business.messenger;
-  const weekdayHours = business.hours.find((entry) => entry.day === "Monday");
+  const hasImage = Boolean(hero.image);
+  const ratingReady = Boolean(business.ratingValue && business.ratingCount);
+  const hoursSummary = summarizeHours(business.hours);
+  const headlineLines = hero.headline.split("\n").filter(Boolean);
 
   return (
-    <section className="relative overflow-hidden border-b border-line bg-ink u-noise">
-      <div
-        aria-hidden="true"
-        className="u-grid-lines absolute inset-0 opacity-50"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute -left-32 top-1/3 h-96 w-96 rounded-full bg-flare/12 blur-[120px]"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute right-0 top-0 h-full w-px bg-line"
-      />
+    <section className="relative isolate overflow-hidden border-b border-line bg-ink u-noise">
+      {hasImage ? (
+        <div aria-hidden="true" className="absolute inset-0 -z-10">
+          <Image
+            src={hero.image}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            quality={82}
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/92 to-ink/45" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-ink/70" />
+        </div>
+      ) : (
+        <>
+          <div
+            aria-hidden="true"
+            className="u-grid-lines absolute inset-0 -z-10 opacity-50"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute -left-40 top-1/4 -z-10 h-[32rem] w-[32rem] rounded-full bg-flare/10 blur-[140px]"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-6 left-0 -z-10 select-none whitespace-nowrap text-[22vw] font-bold uppercase leading-none tracking-tighter text-transparent opacity-[0.07]"
+            style={{
+              fontFamily: "var(--font-condensed)",
+              WebkitTextStroke: "1px var(--color-chalk)",
+            }}
+          >
+            Knock&apos;ls
+          </span>
+        </>
+      )}
 
-      <div className="u-shell relative grid gap-12 py-16 md:py-24 lg:grid-cols-[1.35fr_1fr] lg:gap-16 lg:py-28">
+      <div className="u-shell relative grid items-center gap-12 py-16 md:py-20 lg:grid-cols-[1.4fr_0.85fr] lg:gap-14 lg:py-24 xl:py-28">
         <div>
-          <Eyebrow>{hero.eyebrow}</Eyebrow>
+          <span className="hero-rise" style={{ animationDelay: "40ms" }}>
+            <Eyebrow>{hero.eyebrow}</Eyebrow>
+          </span>
 
-          <h1 className="u-display mt-7 whitespace-pre-line text-[3.25rem] leading-[0.92] sm:text-7xl lg:text-[5.75rem]">
-            {hero.headline}
+          <h1 className="u-display mt-7 text-[clamp(2.6rem,8.5vw,6.25rem)] leading-[0.9]">
+            {headlineLines.map((line, index) => (
+              <span
+                key={line}
+                className="hero-rise block"
+                style={{ animationDelay: `${120 + index * 90}ms` }}
+              >
+                {index === headlineLines.length - 1 ? (
+                  <>
+                    {line.replace(/\.$/, "")}
+                    <span className="text-flare">.</span>
+                  </>
+                ) : (
+                  line
+                )}
+              </span>
+            ))}
           </h1>
 
-          <p className="mt-7 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
+          <div
+            aria-hidden="true"
+            className="hero-rise mt-7 h-px w-24 bg-flare"
+            style={{ animationDelay: "420ms" }}
+          />
+
+          <p
+            className="hero-rise mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
+            style={{ animationDelay: "480ms" }}
+          >
             {hero.subheadline}
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
+          <div
+            className="hero-rise mt-9 flex flex-wrap items-center gap-3"
+            style={{ animationDelay: "560ms" }}
+          >
             <ButtonLink
               href={hero.primaryHref || "/book"}
               variant="primary"
@@ -57,25 +115,31 @@ export function Hero({ settings }: { settings: SiteSettings }) {
             </ButtonLink>
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-            <span className="inline-flex items-center gap-2 text-sm text-muted">
-              <span className="flex gap-0.5" aria-hidden="true">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <Star
-                    key={index}
-                    size={13}
-                    className="fill-flare text-flare"
-                  />
-                ))}
-              </span>
-              <span className="font-medium text-chalk">
-                {business.ratingValue || "5.0"}
-              </span>
-              <span>
-                from {business.ratingCount || "12"} public review
-                {business.ratingCount === "1" ? "" : "s"}
-              </span>
-            </span>
+          <div className="hero-rise mt-9 flex flex-wrap items-center gap-x-7 gap-y-3" style={{ animationDelay: "640ms" }}>
+            {ratingReady ? (
+              <a
+                href="/testimonials"
+                data-track="cta_hero_rating"
+                className="inline-flex items-center gap-2 text-sm text-muted transition-colors hover:text-chalk"
+              >
+                <span className="flex gap-0.5" aria-hidden="true">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star
+                      key={index}
+                      size={13}
+                      className="fill-flare text-flare"
+                    />
+                  ))}
+                </span>
+                <span className="font-medium text-chalk">
+                  {business.ratingValue}
+                </span>
+                <span>
+                  from {business.ratingCount} public review
+                  {business.ratingCount === "1" ? "" : "s"}
+                </span>
+              </a>
+            ) : null}
             <a
               href={`tel:${business.phone}`}
               data-track="cta_hero_phone"
@@ -87,42 +151,47 @@ export function Hero({ settings }: { settings: SiteSettings }) {
           </div>
         </div>
 
-        <aside className="border border-line bg-ink-800/80 backdrop-blur-sm">
-          <div className="border-b border-line px-6 py-5">
+        <aside
+          className="hero-rise border border-line bg-ink-800/90 backdrop-blur-sm"
+          style={{ animationDelay: "360ms" }}
+          aria-label="Gym location and opening hours"
+        >
+          <div className="u-hatch border-b border-line px-6 py-4">
             <p className="u-label text-flare-soft">Train at Knock&apos;ls</p>
-            <p className="u-display mt-3 text-3xl leading-tight">
-              {business.tagline}
-            </p>
           </div>
 
-          <div className="grid gap-5 px-6 py-6">
-            <div>
-              <p className="u-label text-muted-dim">Where</p>
-              <address className="mt-2 not-italic text-sm leading-relaxed text-chalk">
-                {business.addressLine1}
-                <br />
-                {[business.addressLine2, business.city].filter(Boolean).join(", ")}{" "}
-                {business.postal}
-              </address>
-              {business.directionsNote ? (
-                <p className="mt-2 text-xs text-flare-soft">
-                  {business.directionsNote}
-                </p>
-              ) : null}
-            </div>
+          <div className="px-6 py-6">
+            <p className="u-display text-2xl leading-tight sm:text-3xl">
+              {business.tagline}
+            </p>
 
-            <div>
-              <p className="u-label text-muted-dim">Opening hours</p>
-              <p className="mt-2 text-sm text-chalk">
-                Mon–Fri {weekdayHours?.open} – {weekdayHours?.close}
-              </p>
-              <p className="text-sm text-muted">
-                Sat{" "}
-                {business.hours.find((entry) => entry.day === "Saturday")?.open}{" "}
-                – {business.hours.find((entry) => entry.day === "Saturday")?.close}
-                {" · "}Sun closed
-              </p>
-            </div>
+            <dl className="mt-6 grid gap-5">
+              <div>
+                <dt className="u-label text-muted-dim">Where</dt>
+                <dd className="mt-2 text-sm leading-relaxed text-chalk">
+                  <address className="not-italic">
+                    {business.addressLine1}
+                    <br />
+                    {[business.addressLine2, business.city]
+                      .filter(Boolean)
+                      .join(", ")}{" "}
+                    {business.postal}
+                  </address>
+                  {business.directionsNote ? (
+                    <span className="mt-2 block text-xs text-flare-soft">
+                      {business.directionsNote}
+                    </span>
+                  ) : null}
+                </dd>
+              </div>
+
+              <div>
+                <dt className="u-label text-muted-dim">Opening hours</dt>
+                <dd className="mt-2 text-sm leading-relaxed text-muted">
+                  {hoursSummary}
+                </dd>
+              </div>
+            </dl>
           </div>
 
           <div className="grid grid-cols-2 gap-px border-t border-line bg-line">
@@ -131,7 +200,7 @@ export function Hero({ settings }: { settings: SiteSettings }) {
               target="_blank"
               rel="noopener noreferrer"
               data-track="map_click_hero"
-              className="flex items-center justify-center gap-2 bg-ink-800 px-4 py-4 text-xs font-semibold tracking-widest uppercase transition-colors hover:bg-ink-700"
+              className="flex min-h-12 items-center justify-center gap-2 bg-ink-800 px-4 py-4 text-xs font-semibold tracking-widest uppercase transition-colors hover:bg-ink-700"
             >
               <MapPin size={14} aria-hidden="true" />
               Map
@@ -139,33 +208,13 @@ export function Hero({ settings }: { settings: SiteSettings }) {
             <a
               href={`tel:${business.phone}`}
               data-track="cta_hero_call_panel"
-              className="flex items-center justify-center gap-2 bg-ink-800 px-4 py-4 text-xs font-semibold tracking-widest uppercase transition-colors hover:bg-ink-700"
+              className="flex min-h-12 items-center justify-center gap-2 bg-ink-800 px-4 py-4 text-xs font-semibold tracking-widest uppercase transition-colors hover:bg-ink-700"
             >
               <Phone size={14} aria-hidden="true" />
               Call
             </a>
           </div>
         </aside>
-      </div>
-
-      <div className="border-t border-line bg-ink-800/60">
-        <div className="u-shell flex flex-wrap items-center gap-x-8 gap-y-3 py-4">
-          {[
-            "Boxing",
-            "Muay Thai",
-            "Private coaching",
-            "Beginners welcome",
-            "Mactan, Cebu",
-          ].map((item) => (
-            <span
-              key={item}
-              className="u-label flex items-center gap-3 text-muted"
-            >
-              <span className="h-1.5 w-1.5 bg-flare" aria-hidden="true" />
-              {item}
-            </span>
-          ))}
-        </div>
       </div>
     </section>
   );

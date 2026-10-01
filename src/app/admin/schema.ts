@@ -20,6 +20,8 @@ export interface FieldDef {
   hint?: string;
   rows?: number;
   required?: boolean;
+  min?: number;
+  max?: number;
 }
 
 export interface CollectionSchema {
@@ -148,7 +150,7 @@ export const COLLECTION_SCHEMAS: Record<CollectionKey, CollectionSchema> = {
         hint: "e.g. Public review",
       },
       { name: "date", label: "Date", type: "date", hint: "YYYY-MM-DD" },
-      { name: "rating", label: "Rating (1–5)", type: "number" },
+      { name: "rating", label: "Rating (1–5)", type: "number", min: 1, max: 5 },
     ],
   },
   faqs: {
@@ -221,8 +223,14 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
     description: "The first screen visitors see on the home page.",
     fields: [
       { name: "eyebrow", label: "Eyebrow", hint: "Small label above the headline" },
-      { name: "headline", label: "Headline", required: true },
+      { name: "headline", label: "Headline", required: true, hint: "One line per row" },
       { name: "subheadline", label: "Subheadline", type: "textarea", rows: 3 },
+      {
+        name: "image",
+        label: "Hero background image",
+        type: "image",
+        hint: "Optional. Landscape photo behind the headline.",
+      },
       { name: "primaryLabel", label: "Primary button label" },
       { name: "primaryHref", label: "Primary button link" },
       { name: "secondaryLabel", label: "Secondary button label" },
@@ -241,10 +249,16 @@ export const SETTINGS_SECTIONS: SettingsSection[] = [
         rows: 5,
         hint: "One per line, format: Title | Description",
       },
+      { name: "benefitsHeading", label: "Benefits heading" },
       { name: "programsHeading", label: "Programs heading" },
       { name: "programsText", label: "Programs intro", type: "textarea", rows: 2 },
-      { name: "environmentHeading", label: "First visit heading" },
-      { name: "environmentText", label: "First visit intro", type: "textarea", rows: 2 },
+      { name: "environmentHeading", label: "Gallery section heading" },
+      {
+        name: "environmentText",
+        label: "Gallery section intro",
+        type: "textarea",
+        rows: 2,
+      },
       { name: "proofHeading", label: "Testimonials heading" },
       { name: "proofText", label: "Testimonials intro", type: "textarea", rows: 2 },
       { name: "ctaHeading", label: "Bottom CTA heading" },

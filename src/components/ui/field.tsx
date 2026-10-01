@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 export const fieldClasses =
-  "w-full bg-ink-700 border border-line px-4 py-3 text-sm text-chalk placeholder:text-muted-dim transition-colors focus:border-flare focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-flare-soft";
+  "w-full min-h-11 bg-ink-700 border border-line px-4 py-2.5 text-sm text-chalk placeholder:text-muted-dim transition-colors focus:border-flare focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-flare-soft disabled:opacity-70";
 
 export function FieldLabel({
   htmlFor,
@@ -9,19 +9,24 @@ export function FieldLabel({
   hint,
   className,
 }: {
-  htmlFor: string;
+  htmlFor?: string;
   children: React.ReactNode;
   hint?: string;
   className?: string;
 }) {
+  const content = (
+    <span className="u-label text-muted">{children}</span>
+  );
+
   return (
     <div className={cn("flex items-baseline justify-between gap-3", className)}>
-      <label
-        htmlFor={htmlFor}
-        className="u-label text-muted"
-      >
-        {children}
-      </label>
+      {htmlFor ? (
+        <label htmlFor={htmlFor} className="u-label text-muted">
+          {children}
+        </label>
+      ) : (
+        content
+      )}
       {hint ? <span className="text-xs text-muted-dim">{hint}</span> : null}
     </div>
   );
@@ -58,7 +63,7 @@ export function Select({
   return (
     <select
       id={id}
-      className={cn(fieldClasses, "appearance-none pr-10", className)}
+      className={cn(fieldClasses, "select-chevron appearance-none pr-10", className)}
       {...props}
     >
       {children}

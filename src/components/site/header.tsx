@@ -11,12 +11,12 @@ export async function Header() {
   const messenger = hero.secondaryHref || business.messenger;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-ink/90 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-line bg-ink/92 backdrop-blur-md supports-[backdrop-filter]:bg-ink/80">
       <div className="u-shell flex h-16 items-center justify-between gap-6 md:h-20">
         <Wordmark wordmark={business.wordmark} tagline="Boxing Gym" />
 
         <nav
-          className="hidden items-center gap-6 lg:flex xl:gap-8"
+          className="hidden items-center gap-6 lg:flex xl:gap-7"
           aria-label="Primary navigation"
         >
           {SITE_NAV.map((item) => (
@@ -37,7 +37,12 @@ export async function Header() {
             <MessageCircle size={14} aria-hidden="true" />
             Message us
           </ButtonLink>
-          <ButtonLink href="/book" variant="primary" size="sm" data-track="cta_trial">
+          <ButtonLink
+            href="/book"
+            variant="primary"
+            size="sm"
+            data-track="cta_trial"
+          >
             {trial.label}
           </ButtonLink>
         </div>

@@ -33,7 +33,7 @@ export default async function ProgramsPage() {
       >
         <div className="flex flex-wrap gap-3">
           <ButtonLink href="/book" variant="primary" data-track="cta_programs_trial">
-            Book a trial session
+            {settings.trial.label}
             <ArrowRight size={15} aria-hidden="true" />
           </ButtonLink>
           <ButtonLink href="/schedule" variant="outline" data-track="cta_programs_schedule">
@@ -45,7 +45,7 @@ export default async function ProgramsPage() {
       <section className="border-b border-line bg-ink">
         <div className="u-shell py-14 md:py-20">
           {programs.length ? (
-            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
               {programs.map((program, index) => (
                 <ProgramCard key={program.slug} program={program} index={index} />
               ))}

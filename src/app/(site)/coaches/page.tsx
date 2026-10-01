@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ArrowRight, MessageCircle } from "lucide-react";
-import Image from "next/image";
 import { getPublishedItems, getSettings } from "@/lib/content/access";
 import { buildMetadata } from "@/lib/seo";
 import type { Coach } from "@/lib/content/types";
@@ -8,6 +7,7 @@ import { PageHero } from "@/components/site/page-hero";
 import { CtaBand } from "@/components/site/cta-band";
 import { EmptyState } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
+import { MediaImage } from "@/components/ui/media-image";
 import { Reveal, SectionHeading } from "@/components/ui/section";
 
 export const revalidate = 60;
@@ -25,6 +25,13 @@ function initials(name: string) {
     .join("");
 }
 
+function specialtyTags(value: string): string[] {
+  return value
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean);
+}
+
 export default async function CoachesPage() {
   const [settings, items] = await Promise.all([
     getSettings(),
@@ -39,64 +46,80 @@ export default async function CoachesPage() {
         eyebrow="Coaches"
         title="Who you will train with"
         text="Hands-on coaching from people who train fighters — from your first stance to your next bout."
-      />
+      >
+        <div className="flex flex-wrap gap-3">
+          <ButtonLink href="/book" variant="primary" data-track="cta_coaches_trial">
+            {settings.trial.label}
+            <ArrowRight size={15} aria-hidden="true" />
+          </ButtonLink>
+          <ButtonLink href={messenger} variant="outline" data-track="cta_coaches_messenger">
+            <MessageCircle size={15} aria-hidden="true" />
+            Message us
+          </ButtonLink>
+        </div>
+      </PageHero>
 
       <section className="border-b border-line bg-ink">
         <div className="u-shell py-14 md:py-20">
           {coaches.length ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {coaches.map((coach, index) => (
-                <Reveal
-                  key={`${coach.name}-${index}`}
-                  delay={index * 60}
-                  as="article"
-                  className="border border-line bg-ink-800"
-                >
-                  <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-line bg-ink-700">
-                    {coach.photo ? (
-                      <Image
-                        src={coach.photo}
-                        alt={`${coach.name}, ${coach.role}`}
-                        fill
-                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center u-hatch">
-                        <span className="u-display text-6xl text-muted-dim">
-                          {initials(coach.name) || "KB"}
+            <>
+              <SectionHeading
+                eyebrow="The team"
+                title="Coaches on the floor"
+                text="Every session here is led — you are coached through the round, not left to figure it out alone."
+              />
+              <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {coaches.map((coach, index) => {
+                  const tags = specialtyTags(coach.specialties);
+                  return (
+                    <Reveal
+                      key={`${coach.name}-${index}`}
+                      delay={index * 60}
+                      as="article"
+                      className="border border-line bg-ink-800"
+                    >
+                      <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-line bg-ink-700">
+                        {coach.photo ? (
+                          <MediaImage
+                            src={coach.photo}
+                            alt={`${coach.name}, ${coach.role}`}
+                            fill
+                            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          />
+                        ) : (
+                          <div className="u-hatch flex h-full w-full items-center justify-center">
+                            <span className="u-display text-6xl text-muted-dim">
+                              {initials(coach.name) || "KB"}
+                            </span>
+                          </div>
+                        )}
+                        <span className="u-label absolute left-4 top-4 border border-flare/50 bg-ink/80 px-2.5 py-1 text-flare-soft backdrop-blur">
+                          {coach.role || "Coach"}
                         </span>
                       </div>
-                    )}
-                    <span className="u-label absolute left-4 top-4 border border-flare/50 bg-ink/80 px-2.5 py-1 text-flare-soft backdrop-blur">
-                      {coach.role || "Coach"}
-                    </span>
-                  </div>
-                  <div className="p-6">
-                    <h2 className="u-display text-3xl">{coach.name}</h2>
-                    {coach.specialties.includes(",") ? (
-                      <ul className="mt-4 flex flex-wrap gap-2">
-                        {coach.specialties.split(",").map((tag) => (
-                          <li
-                            key={tag.trim()}
-                            className="u-label border border-line px-2.5 py-1.5 text-muted"
-                          >
-                            {tag.trim()}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="u-label mt-3 text-flare-soft">
-                        {coach.specialties}
-                      </p>
-                    )}
-                    <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-muted">
-                      {coach.bio}
-                    </p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
+                      <div className="p-6">
+                        <h3 className="u-display text-3xl">{coach.name}</h3>
+                        {tags.length ? (
+                          <ul className="mt-4 flex flex-wrap gap-2">
+                            {tags.map((tag) => (
+                              <li
+                                key={tag}
+                                className="u-label border border-line px-2.5 py-1.5 text-muted"
+                              >
+                                {tag}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+                        <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-muted">
+                          {coach.bio}
+                        </p>
+                      </div>
+                    </Reveal>
+                  );
+                })}
+              </div>
+            </>
           ) : (
             <EmptyState
               title="Coach profiles are on the way"
@@ -108,7 +131,7 @@ export default async function CoachesPage() {
                     Message the gym
                   </ButtonLink>
                   <ButtonLink href="/book" variant="outline">
-                    Book a trial session
+                    {settings.trial.label}
                     <ArrowRight size={15} aria-hidden="true" />
                   </ButtonLink>
                 </div>

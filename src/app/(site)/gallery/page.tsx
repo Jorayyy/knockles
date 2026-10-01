@@ -29,7 +29,17 @@ export default async function GalleryPage() {
         eyebrow="Gallery"
         title="Inside the gym"
         text="The floor, the bags and the people who train here — real photos from Knock'ls."
-      />
+      >
+        <div className="flex flex-wrap gap-3">
+          <ButtonLink href="/book" variant="primary" data-track="cta_gallery_trial">
+            {settings.trial.label}
+          </ButtonLink>
+          <ButtonLink href={messenger} variant="outline" data-track="cta_gallery_messenger">
+            <MessageCircle size={15} aria-hidden="true" />
+            Message us
+          </ButtonLink>
+        </div>
+      </PageHero>
 
       <section className="border-b border-line bg-ink">
         <div className="u-shell py-14 md:py-20">
@@ -46,7 +56,7 @@ export default async function GalleryPage() {
                     Message the gym
                   </ButtonLink>
                   <ButtonLink href="/book" variant="outline">
-                    Book a trial session
+                    {settings.trial.label}
                   </ButtonLink>
                 </div>
               }
@@ -56,7 +66,7 @@ export default async function GalleryPage() {
           {images.length ? (
             <p className="mt-8 flex items-center gap-2 text-sm text-muted-dim">
               <Camera size={14} aria-hidden="true" />
-              Tap any photo to view it full screen.
+              Select any photo to view it full screen.
             </p>
           ) : null}
         </div>

@@ -34,7 +34,7 @@ function HoursEditor({ value }: { value: HoursRow[] | undefined }) {
             key={day}
             className={cn(
               "grid grid-cols-[1fr] gap-3 border border-line bg-ink-700 p-4 sm:grid-cols-[7rem_1fr_1fr_auto] sm:items-center",
-              closed && "opacity-60"
+              closed && "opacity-70"
             )}
           >
             <div>
@@ -47,7 +47,6 @@ function HoursEditor({ value }: { value: HoursRow[] | undefined }) {
               defaultValue={row?.open ?? ""}
               placeholder="1:00 PM"
               aria-label={`${dayName} opening time`}
-              disabled={closed}
             />
             <TextInput
               id={`hours-${index}-close`}
@@ -55,7 +54,6 @@ function HoursEditor({ value }: { value: HoursRow[] | undefined }) {
               defaultValue={row?.close ?? ""}
               placeholder="8:15 PM"
               aria-label={`${dayName} closing time`}
-              disabled={closed}
             />
             <label className="flex items-center gap-2 text-sm text-muted">
               <input
@@ -85,9 +83,7 @@ function SchemaField({
   if (field.type === "hours") {
     return (
       <div className="flex flex-col gap-3">
-        <FieldLabel htmlFor={id} hint={field.hint}>
-          {field.label}
-        </FieldLabel>
+        <FieldLabel hint={field.hint}>{field.label}</FieldLabel>
         <HoursEditor value={value as HoursRow[] | undefined} />
       </div>
     );
@@ -171,8 +167,8 @@ function SchemaField({
           required={field.required}
           defaultValue={typeof value === "string" ? value : ""}
           placeholder={field.hint}
-          min={field.type === "number" ? 1 : undefined}
-          max={field.type === "number" ? 5 : undefined}
+          min={field.min}
+          max={field.max}
         />
       )}
     </div>

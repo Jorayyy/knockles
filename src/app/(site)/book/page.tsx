@@ -62,7 +62,7 @@ export default async function BookPage({
       <section className="border-b border-line bg-ink">
         <div className="u-shell grid gap-8 py-14 md:py-20 lg:grid-cols-[1.5fr_1fr] lg:items-start">
           <div>
-            {errorKey ? (
+            {!sent && errorKey ? (
               <div
                 className="mb-6 flex items-start gap-3 border border-flare/50 bg-flare/10 px-5 py-4 text-sm text-flare-soft"
                 role="alert"

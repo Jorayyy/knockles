@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ArrowRight, MessageCircle, Star } from "lucide-react";
 import { getPublishedItems, getSettings, parseKeyedLines, parseParagraphs } from "@/lib/content/access";
 import { buildMetadata } from "@/lib/seo";
 import type { Testimonial } from "@/lib/content/types";
 import { PageHero } from "@/components/site/page-hero";
-import { CtaBand } from "@/components/site/cta-band";
 import { ButtonLink } from "@/components/ui/button";
 import { Eyebrow, Reveal, SectionHeading } from "@/components/ui/section";
 
@@ -31,7 +31,18 @@ export default async function AboutPage() {
         eyebrow="About the gym"
         title={about.headline}
         text={about.lead}
-      />
+      >
+        <div className="flex flex-wrap gap-3">
+          <ButtonLink href="/book" variant="primary" data-track="cta_about_trial">
+            {settings.trial.label}
+            <ArrowRight size={15} aria-hidden="true" />
+          </ButtonLink>
+          <ButtonLink href={messenger} variant="outline" data-track="cta_about_messenger">
+            <MessageCircle size={15} aria-hidden="true" />
+            Message us
+          </ButtonLink>
+        </div>
+      </PageHero>
 
       <section className="border-b border-line bg-ink">
         <div className="u-shell grid gap-10 py-14 md:py-20 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
@@ -69,23 +80,44 @@ export default async function AboutPage() {
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted">Location</dt>
-                  <dd className="text-right text-chalk">Mactan, Cebu</dd>
+                  <dd className="text-right text-chalk">
+                    {[business.addressLine2, business.city]
+                      .filter(Boolean)
+                      .join(", ")}
+                  </dd>
                 </div>
               </dl>
             </div>
 
             {featured ? (
               <figure className="border border-flare/40 bg-ink-800 p-6 sm:p-7">
-                <div className="flex gap-0.5" aria-hidden="true">
+                <div
+                  className="flex gap-0.5"
+                  role="img"
+                  aria-label={`Rated ${featured.rating} out of 5`}
+                >
                   {Array.from({ length: featured.rating }).map((_, index) => (
-                    <Star key={index} size={13} className="fill-flare text-flare" />
+                    <Star
+                      key={index}
+                      size={13}
+                      className="fill-flare text-flare"
+                      aria-hidden="true"
+                    />
                   ))}
                 </div>
                 <blockquote className="mt-4 text-base leading-relaxed text-chalk/90">
-                  “{featured.quote}”
+                  &ldquo;{featured.quote}&rdquo;
                 </blockquote>
-                <figcaption className="u-label mt-4 text-muted-dim">
-                  {featured.source || "Public review"}
+                <figcaption className="mt-4 flex items-center justify-between gap-3">
+                  <span className="u-label text-muted-dim">
+                    {featured.source || "Public review"}
+                  </span>
+                  <Link
+                    href="/testimonials"
+                    className="u-label text-chalk transition-colors hover:text-flare-soft"
+                  >
+                    All reviews
+                  </Link>
                 </figcaption>
               </figure>
             ) : null}
@@ -133,18 +165,17 @@ export default async function AboutPage() {
               <MessageCircle size={16} aria-hidden="true" />
               Message us
             </ButtonLink>
+            <ButtonLink
+              href={`tel:${business.phone}`}
+              variant="outline"
+              size="lg"
+              data-track="cta_about_phone"
+            >
+              {business.phoneDisplay || business.phone}
+            </ButtonLink>
           </div>
         </div>
       </section>
-
-      <CtaBand
-        heading={settings.home.ctaHeading}
-        text={settings.home.ctaText}
-        primaryLabel={settings.trial.label}
-        secondaryHref={messenger}
-        phoneLabel={business.phoneDisplay || business.phone}
-        phoneHref={`tel:${business.phone}`}
-      />
     </>
   );
 }

@@ -3,7 +3,6 @@
 import { useActionState, useState } from "react";
 import {
   ChevronDown,
-  CircleCheckBig,
   Eye,
   EyeOff,
   LoaderCircle,
@@ -20,29 +19,12 @@ import {
 import type { CollectionSchema } from "@/app/admin/schema";
 import type { CollectionKey, StoredItem } from "@/lib/content/types";
 import { SchemaFields } from "@/components/admin/fields";
+import { FormMessage } from "@/components/admin/form-message";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const IDLE: ActionState = { ok: false };
-
-function FormMessage({ state }: { state: ActionState }) {
-  if (!state.error && !state.message) return null;
-  return (
-    <p
-      className={cn(
-        "flex items-start gap-2 border px-4 py-3 text-sm",
-        state.ok
-          ? "border-flare/50 bg-flare/10 text-flare-soft"
-          : "border-flare/50 bg-flare/10 text-flare-soft"
-      )}
-      role={state.ok ? "status" : "alert"}
-    >
-      <CircleCheckBig size={15} className="mt-0.5 shrink-0" aria-hidden="true" />
-      <span>{state.ok ? state.message : state.error}</span>
-    </p>
-  );
-}
 
 function CreateForm({
   collection,
