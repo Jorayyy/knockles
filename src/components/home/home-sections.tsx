@@ -104,8 +104,33 @@ export function TrustStrip({ business }: { business: BusinessSettings }) {
   );
 }
 
+const GRID_SM: Record<number, string> = {
+  1: "sm:grid-cols-1",
+  2: "sm:grid-cols-2",
+};
+
+const GRID_LG: Record<number, string> = {
+  1: "lg:grid-cols-1",
+  2: "lg:grid-cols-2",
+  3: "lg:grid-cols-3",
+  4: "lg:grid-cols-4",
+};
+
+function fillColumns(count: number, max: number): number {
+  for (let cols = Math.min(max, Math.max(count, 1)); cols > 1; cols -= 1) {
+    if (count % cols === 0) return cols;
+  }
+  return 1;
+}
+
 export function BenefitsSection({ home }: { home: HomeSettings }) {
   const benefits = parseKeyedLines(home.benefits);
+
+  if (!benefits.length) return null;
+
+  const gridClass = `${GRID_SM[fillColumns(benefits.length, 2)]} ${
+    GRID_LG[fillColumns(benefits.length, 4)]
+  }`;
 
   return (
     <section className="border-b border-line bg-ink">
@@ -118,7 +143,7 @@ export function BenefitsSection({ home }: { home: HomeSettings }) {
           />
         </Reveal>
 
-        <div className="mt-10 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+        <div className={`mt-10 grid gap-px border border-line bg-line ${gridClass}`}>
           {benefits.map((benefit, index) => (
             <Reveal
               key={benefit.title}

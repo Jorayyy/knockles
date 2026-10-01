@@ -39,28 +39,29 @@ export function parseKeyedLines(value: string): {
     .map((line) => line.trim())
     .filter(Boolean);
 
-  if (!lines.length) return [];
-
-  // Canonical format is "Title | Description" on a single line.
-  const allPipeDelimited = lines.every((line) => line.includes("|"));
-
-  if (allPipeDelimited) {
-    return lines.map((line) => {
-      const [title, ...rest] = line.split("|");
-      return { title: title.trim(), text: rest.join("|").trim() };
-    });
-  }
-
-  // Legacy format alternates a title line and a description line.
   const entries: { title: string; text: string }[] = [];
-  for (let index = 0; index < lines.length; index += 2) {
-    const [title, ...rest] = lines[index].split("|");
-    entries.push({
-      title: title.trim(),
-      text: (rest.join("|").trim() || lines[index + 1]?.trim() || "").trim(),
-    });
-    if (rest.length === 0 && lines[index + 1]) index += 1;
+  let index = 0;
+
+  while (index < lines.length) {
+    const line = lines[index];
+    const separator = line.indexOf("|");
+
+    // Canonical format: "Title | Description" on a single line.
+    if (separator !== -1) {
+      entries.push({
+        title: line.slice(0, separator).trim(),
+        text: line.slice(separator + 1).trim(),
+      });
+      index += 1;
+      continue;
+    }
+
+    // Legacy format: a title line followed by a description line.
+    const text = lines[index + 1] ?? "";
+    entries.push({ title: line, text });
+    index += text ? 2 : 1;
   }
+
   return entries;
 }
 
