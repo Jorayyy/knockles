@@ -61,7 +61,11 @@ export async function Footer() {
     <footer className="border-t border-line bg-ink-800 pb-24 lg:pb-0">
       <div className="u-shell grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-4 lg:py-20">
         <div>
-          <Wordmark wordmark={business.wordmark} tagline="Boxing Gym" />
+          <Wordmark
+            wordmark={business.wordmark}
+            tagline="Boxing Gym"
+            logo="/logo.jpg"
+          />
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-muted">
             {seo.ogDescription || business.tagline}
           </p>

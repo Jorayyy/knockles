@@ -55,7 +55,7 @@ export function Hero({ settings }: { settings: SiteSettings }) {
 
       <div className="u-shell relative grid items-center gap-12 py-16 md:py-20 lg:grid-cols-[1.4fr_0.85fr] lg:gap-14 lg:py-24 xl:py-28">
         <div>
-          <span className="hero-rise" style={{ animationDelay: "40ms" }}>
+          <span className="hero-rise block" style={{ animationDelay: "40ms" }}>
             <Eyebrow>{hero.eyebrow}</Eyebrow>
           </span>
 

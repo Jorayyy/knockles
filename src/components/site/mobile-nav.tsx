@@ -93,7 +93,7 @@ export function MobileNav({
           className="fixed inset-0 z-50 flex flex-col bg-ink"
         >
           <div className="flex h-16 items-center justify-between border-b border-line px-5 md:h-20">
-            <Wordmark wordmark={wordmark} />
+            <Wordmark wordmark={wordmark} logo="/logo.jpg" />
             <button
               type="button"
               onClick={() => setOpen(false)}

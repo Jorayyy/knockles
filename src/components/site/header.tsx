@@ -13,7 +13,11 @@ export async function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-ink/92 backdrop-blur-md supports-[backdrop-filter]:bg-ink/80">
       <div className="u-shell flex h-16 items-center justify-between gap-6 md:h-20">
-        <Wordmark wordmark={business.wordmark} tagline="Boxing Gym" />
+        <Wordmark
+          wordmark={business.wordmark}
+          tagline="Boxing Gym"
+          logo="/logo.jpg"
+        />
 
         <nav
           className="hidden items-center gap-6 lg:flex xl:gap-7"

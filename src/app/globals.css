@@ -160,7 +160,6 @@
   }
 
   .hero-rise {
-    display: block;
     opacity: 0;
     animation: hero-rise 0.9s var(--ease-out-expo) both;
   }
